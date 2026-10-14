@@ -1,0 +1,11 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Billing – Kiln & Co.</title><link rel="stylesheet" href="css/style.css"></head>
+<body><header id="hdr"></header><main><h2>Billing</h2><div class="layout" id="content"><form class="panel f" id="bill" novalidate hidden>
+<label>Full name<input name="name" autocomplete="name"><span class="err" data-e="name"></span></label>
+<label>Email<input name="email" type="email" autocomplete="email"><span class="err" data-e="email"></span></label>
+<label>Phone<input name="phone" inputmode="numeric" maxlength="10"><span class="err" data-e="phone"></span></label>
+<label>PIN code<input name="pin" inputmode="numeric" maxlength="6"><span class="err" data-e="pin"></span></label>
+<label class="w">Delivery address<input name="address" autocomplete="street-address"><span class="err" data-e="address"></span></label>
+<div class="w pay" role="radiogroup" aria-label="Payment method"><label><input type="radio" name="pay" value="upi" checked>UPI</label><label><input type="radio" name="pay" value="card">Card</label><label><input type="radio" name="pay" value="cod">Cash on delivery</label></div>
+<label class="w" id="upiF">UPI ID<input name="upi" placeholder="name@bank"><span class="err" data-e="upi"></span></label>
+<label class="w" id="cardF" hidden>Card number (demo, only last 4 kept)<input name="card" inputmode="numeric" maxlength="19"><span class="err" data-e="card"></span></label>
+<button class="btn w" id="pay-btn" type="submit">Pay</button></form><div id="sum"></div></div></main><div id="toast" role="status" aria-live="polite"></div><script src="js/common.js"></script><script src="js/billing.js"></script></body></html>

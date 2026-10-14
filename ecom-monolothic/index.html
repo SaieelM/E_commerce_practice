@@ -1,0 +1,863 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Kiln & Co. – Handmade ceramics</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --surface: #fff;
+      --ink: #1c2740;
+      --mute: #5d6882;
+      --line: #dde1ea;
+      --accent: #2a7a74;
+      --accent-ink: #fff;
+      --warn: #b3402a;
+      --gold: #e0a63a;
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #10162a;
+        --surface: #1a2240;
+        --ink: #eef1f8;
+        --mute: #9aa6c4;
+        --line: #2d3760;
+        --accent: #4fb8ae;
+        --accent-ink: #0b1a19;
+        --warn: #ff8a73;
+        color-scheme: dark;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #10162a;
+      --surface: #1a2240;
+      --ink: #eef1f8;
+      --mute: #9aa6c4;
+      --line: #2d3760;
+      --accent: #4fb8ae;
+      --accent-ink: #0b1a19;
+      --warn: #ff8a73;
+      color-scheme: dark;
+    }
+
+    html {
+      scroll-padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font:
+        16px/1.5 "DM Sans",
+        system-ui,
+        sans-serif;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: "Bricolage Grotesque", "DM Sans", system-ui, sans-serif;
+      line-height: 1.1;
+      margin: 0;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 2px;
+    }
+
+    header {
+      position: sticky;
+      top: env(safe-area-inset-top, 0px);
+      z-index: 5;
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .bar {
+      max-width: 1080px;
+      margin: auto;
+      padding: 12px 16px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font:
+        800 22px "Bricolage Grotesque",
+        sans-serif;
+      text-decoration: none;
+      margin-right: auto;
+    }
+
+    nav {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: var(--mute);
+      font-weight: 500;
+    }
+
+    nav a[aria-current="page"] {
+      background: var(--accent);
+      color: var(--accent-ink);
+    }
+
+    nav b {
+      font-weight: 700;
+      margin-left: 4px;
+    }
+
+    main {
+      max-width: 1080px;
+      margin: auto;
+      padding: 24px 16px 64px;
+    }
+
+    .hero {
+      padding: 28px 0 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(34px, 6vw, 60px);
+      max-width: 14ch;
+      letter-spacing: -0.02em;
+    }
+
+    .hero p {
+      color: var(--mute);
+      max-width: 46ch;
+    }
+
+    .tools {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 12px 0 20px;
+    }
+
+    input,
+    select {
+      font: inherit;
+      color: inherit;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      width: 100%;
+    }
+
+    .tools input {
+      max-width: 280px;
+    }
+
+    .chip {
+      width: auto;
+      cursor: pointer;
+      border-radius: 999px;
+      padding: 8px 14px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .chip[aria-pressed="true"] {
+      background: var(--ink);
+      color: var(--bg);
+      border-color: var(--ink);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tile {
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+
+    .tile svg {
+      width: 62%;
+    }
+
+    .heart {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 18px;
+      color: var(--mute);
+      padding: 0;
+    }
+
+    .heart[aria-pressed="true"] {
+      color: var(--warn);
+    }
+
+    .info {
+      padding: 12px 14px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .info small {
+      color: var(--mute);
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn {
+      font: inherit;
+      font-weight: 600;
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 16px;
+      background: var(--accent);
+      color: var(--accent-ink);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .btn.ghost {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .btn.sm {
+      padding: 7px 12px;
+    }
+
+    .info .btn {
+      margin-top: auto;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    @media (min-width: 820px) {
+      .layout {
+        grid-template-columns: 1fr 340px;
+        align-items: start;
+      }
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+    }
+
+    .line {
+      display: grid;
+      grid-template-columns: 64px 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .line:last-child {
+      border: 0;
+    }
+
+    .line .tile {
+      border-radius: 10px;
+    }
+
+    .qty {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .qty button {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .sum div {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+    }
+
+    .sum .tot {
+      border-top: 1px solid var(--line);
+      margin-top: 6px;
+      padding-top: 10px;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .f {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .f .w {
+      grid-column: 1/-1;
+    }
+
+    @media (max-width: 520px) {
+      .f {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    label {
+      font-size: 14px;
+      color: var(--mute);
+      display: grid;
+      gap: 4px;
+    }
+
+    .err {
+      color: var(--warn);
+      font-size: 13px;
+      min-height: 1em;
+    }
+
+    .pay {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pay label {
+      flex-direction: row;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .pay input {
+      width: auto;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 48px 16px;
+      color: var(--mute);
+    }
+
+    .empty h2 {
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+
+    .order {
+      margin-bottom: 16px;
+    }
+
+    .tag {
+      background: var(--accent);
+      color: var(--accent-ink);
+      border-radius: 999px;
+      padding: 2px 10px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    #toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+      transform: translateX(-50%);
+      background: var(--ink);
+      color: var(--bg);
+      padding: 10px 18px;
+      border-radius: 10px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    #toast.on {
+      opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #toast {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="bar">
+      <a class="logo" href="#/">Kiln &amp; Co.</a>
+      <nav id="nav" aria-label="Main"></nav>
+    </div>
+  </header>
+  <main id="app" tabindex="-1"></main>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script>
+    /* ===== MONOLITH: one deployable unit, four internal layers =====
+ 1. Data layer     – product catalogue + persistent store
+ 2. Service layer  – cart, wishlist, billing, order business logic
+ 3. View layer     – page renderers (Home, Wishlist, Order, Billing, My orders)
+ 4. Router/Events  – hash router + single delegated event handler          */
+
+    /* ---------- 1. DATA LAYER ---------- */
+    const PRODUCTS = [
+      {
+        id: 1,
+        name: "Tide Bowl",
+        cat: "Bowls",
+        price: 1200,
+        c: "#2a7a74",
+        s: "bowl",
+      },
+      {
+        id: 2,
+        name: "Saffron Mug",
+        cat: "Mugs",
+        price: 650,
+        c: "#e0a63a",
+        s: "mug",
+      },
+      {
+        id: 3,
+        name: "Monsoon Vase",
+        cat: "Vases",
+        price: 2400,
+        c: "#3b5b9a",
+        s: "vase",
+      },
+      {
+        id: 4,
+        name: "Laterite Bowl",
+        cat: "Bowls",
+        price: 950,
+        c: "#b3502f",
+        s: "bowl",
+      },
+      {
+        id: 5,
+        name: "Dusk Mug",
+        cat: "Mugs",
+        price: 700,
+        c: "#6b4f8f",
+        s: "mug",
+      },
+      {
+        id: 6,
+        name: "Palm Vase",
+        cat: "Vases",
+        price: 1850,
+        c: "#4d8a3f",
+        s: "vase",
+      },
+      {
+        id: 7,
+        name: "Chalk Bowl",
+        cat: "Bowls",
+        price: 1100,
+        c: "#8a93a6",
+        s: "bowl",
+      },
+      {
+        id: 8,
+        name: "Ember Mug",
+        cat: "Mugs",
+        price: 620,
+        c: "#c8443a",
+        s: "mug",
+      },
+    ];
+    const SHAPES = {
+      bowl: '<path d="M10 38H90C90 72 70 88 50 88C30 88 10 72 10 38Z"/>',
+      vase: '<path d="M40 12H60V28C86 42 84 82 50 90C16 82 14 42 40 28Z"/>',
+      mug: '<path d="M20 22H70V72C70 84 60 88 45 88C30 88 20 84 20 72Z"/><path d="M70 34H78C92 34 92 62 78 62H70" fill="none" stroke-width="7" stroke="currentColor"/>',
+    };
+    const mem = {};
+    const DB = {
+      get(k, d) {
+        if (k in mem) return mem[k];
+        let v = d;
+        try {
+          const r = localStorage.getItem("kiln:" + k);
+          if (r !== null) v = JSON.parse(r);
+        } catch (e) { }
+        return (mem[k] = v);
+      },
+      set(k, v) {
+        mem[k] = v;
+        try {
+          localStorage.setItem("kiln:" + k, JSON.stringify(v));
+        } catch (e) { }
+      },
+    };
+
+    /* ---------- 2. SERVICE LAYER ---------- */
+    const fmt = (n) => "₹" + n.toLocaleString("en-IN");
+    const esc = (s) =>
+      String(s).replace(
+        /[&<>"']/g,
+        (c) =>
+          ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;",
+          })[c],
+      );
+    const byId = (id) => PRODUCTS.find((p) => p.id === id);
+    const Cart = {
+      all: () => DB.get("cart", {}),
+      count: () => Object.values(Cart.all()).reduce((a, b) => a + b, 0),
+      add(id, n = 1) {
+        const c = { ...Cart.all() };
+        c[id] = (c[id] || 0) + n;
+        if (c[id] <= 0) delete c[id];
+        DB.set("cart", c);
+      },
+      remove(id) {
+        const c = { ...Cart.all() };
+        delete c[id];
+        DB.set("cart", c);
+      },
+      clear() {
+        DB.set("cart", {});
+      },
+      lines: () =>
+        Object.entries(Cart.all())
+          .map(([id, q]) => ({ p: byId(+id), q }))
+          .filter((l) => l.p),
+      totals() {
+        const sub = Cart.lines().reduce((a, l) => a + l.p.price * l.q, 0);
+        const ship = sub === 0 || sub >= 2000 ? 0 : 99,
+          gst = Math.round(sub * 0.18);
+        return { sub, ship, gst, total: sub + ship + gst };
+      },
+    };
+    const Wish = {
+      all: () => DB.get("wish", []),
+      has: (id) => Wish.all().includes(id),
+      toggle(id) {
+        const w = Wish.all();
+        DB.set(
+          "wish",
+          w.includes(id) ? w.filter((x) => x !== id) : [...w, id],
+        );
+        return Wish.has(id);
+      },
+    };
+    const Billing = {
+      validate(f) {
+        const e = {};
+        if (f.name.trim().length < 2) e.name = "Enter your full name";
+        if (!/^\S+@\S+\.\S+$/.test(f.email)) e.email = "Enter a valid email";
+        if (!/^\d{10}$/.test(f.phone))
+          e.phone = "Enter a 10-digit phone number";
+        if (f.address.trim().length < 8)
+          e.address = "Enter your full address";
+        if (!/^\d{6}$/.test(f.pin)) e.pin = "Enter a 6-digit PIN code";
+        if (f.pay === "upi" && !/^[\w.\-]{2,}@[\w]{2,}$/.test(f.upi))
+          e.upi = "Enter a UPI ID like name@bank";
+        if (f.pay === "card" && !/^\d{16}$/.test(f.card.replace(/\s/g, "")))
+          e.card = "Enter a 16-digit card number";
+        return e;
+      },
+    };
+    const Orders = {
+      all: () => DB.get("orders", []),
+      place(f) {
+        const t = Cart.totals();
+        const o = {
+          id: "KC-" + Date.now().toString().slice(-7),
+          date: new Date().toLocaleString("en-IN"),
+          lines: Cart.lines().map((l) => ({
+            name: l.p.name,
+            q: l.q,
+            price: l.p.price,
+          })),
+          totals: t,
+          cust: {
+            name: f.name.trim(),
+            email: f.email.trim(),
+            phone: f.phone,
+            addr: f.address.trim() + " – " + f.pin,
+          },
+          pay:
+            f.pay === "card"
+              ? "Card ending " + f.card.replace(/\s/g, "").slice(-4)
+              : f.pay === "upi"
+                ? "UPI (" + f.upi + ")"
+                : "Cash on delivery",
+        };
+        DB.set("orders", [o, ...Orders.all()]);
+        Cart.clear();
+        return o;
+      },
+    };
+
+    /* ---------- 3. VIEW LAYER ---------- */
+    const vessel = (p) =>
+      `<div class="tile" style="background:color-mix(in srgb,${p.c} 18%,var(--surface));color:${p.c}"><svg viewBox="0 0 100 100" fill="currentColor" aria-hidden="true">${SHAPES[p.s]}</svg>`;
+    const filter = { q: "", cat: "All" };
+    const card = (
+      p,
+    ) => `<article class="card">${vessel(p)}<button class="heart" data-a="wish" data-id="${p.id}" aria-pressed="${Wish.has(p.id)}" aria-label="Wishlist: ${p.name}">${Wish.has(p.id) ? "♥" : "♡"}</button></div>
+<div class="info"><h3>${p.name}</h3><small>${p.cat}</small><div class="row"><b>${fmt(p.price)}</b></div><button class="btn sm" data-a="add" data-id="${p.id}">Add to order</button></div></article>`;
+    const empty = (h, t, l = "Browse the shop") =>
+      `<div class="empty"><h2>${h}</h2><p>${t}</p><a class="btn" href="#/">${l}</a></div>`;
+    const grid = () => {
+      const q = filter.q.toLowerCase();
+      const list = PRODUCTS.filter(
+        (p) =>
+          (filter.cat === "All" || p.cat === filter.cat) &&
+          p.name.toLowerCase().includes(q),
+      );
+      return list.length
+        ? list.map(card).join("")
+        : `<p class="empty">No products match. Clear the search or pick another category.</p>`;
+    };
+
+    const Views = {
+      home: () => `<section class="hero"><h1>Ceramics made in small batches</h1><p>Bowls, mugs and vases glazed by hand. Free delivery on orders over ₹2,000.</p></section>
+ <div class="tools"><input id="q" type="search" placeholder="Search products" aria-label="Search products" value="${esc(filter.q)}">
+ ${["All", "Bowls", "Mugs", "Vases"].map((c) => `<button class="chip" data-a="cat" data-c="${c}" aria-pressed="${filter.cat === c}">${c}</button>`).join("")}</div>
+ <div class="grid" id="grid">${grid()}</div>`,
+      wishlist() {
+        const items = Wish.all().map(byId).filter(Boolean);
+        if (!items.length)
+          return empty(
+            "Your wishlist is empty",
+            "Tap the heart on any product to save it here.",
+          );
+        return `<h2>Wishlist</h2><div class="grid" style="margin-top:18px">${items.map(card).join("")}</div>
+  <p><button class="btn ghost" data-a="wishall">Add all to order</button></p>`;
+      },
+      order() {
+        const L = Cart.lines();
+        if (!L.length)
+          return empty(
+            "Your order is empty",
+            "Add something from the shop to get started.",
+          );
+        const t = Cart.totals();
+        return `<h2>Your order</h2><div class="layout" style="margin-top:18px"><div class="panel">${L.map(
+          ({ p, q }) => `
+  <div class="line">${vessel(p)}</div><div><b>${p.name}</b><div><small>${fmt(p.price)} each</small></div>
+  <div class="qty"><button data-a="qty" data-id="${p.id}" data-n="-1" aria-label="Decrease quantity">−</button><span>${q}</span><button data-a="qty" data-id="${p.id}" data-n="1" aria-label="Increase quantity">+</button>
+  <button class="btn ghost sm" data-a="del" data-id="${p.id}">Remove</button></div></div><b>${fmt(p.price * q)}</b></div>`,
+        ).join("")}</div>
+  ${summary(t)}</div>`;
+      },
+      billing() {
+        const L = Cart.lines();
+        if (!L.length)
+          return empty(
+            "Nothing to bill yet",
+            "Add items to your order first.",
+            "Go to shop",
+          );
+        const t = Cart.totals();
+        return `<h2>Billing</h2><div class="layout" style="margin-top:18px"><form class="panel f" id="bill" novalidate>
+  <label>Full name<input name="name" autocomplete="name"><span class="err" data-e="name"></span></label>
+  <label>Email<input name="email" type="email" autocomplete="email"><span class="err" data-e="email"></span></label>
+  <label>Phone<input name="phone" inputmode="numeric" maxlength="10" autocomplete="tel"><span class="err" data-e="phone"></span></label>
+  <label>PIN code<input name="pin" inputmode="numeric" maxlength="6"><span class="err" data-e="pin"></span></label>
+  <label class="w">Delivery address<input name="address" autocomplete="street-address"><span class="err" data-e="address"></span></label>
+  <div class="w pay" role="radiogroup" aria-label="Payment method">
+   <label><input type="radio" name="pay" value="upi" checked>UPI</label><label><input type="radio" name="pay" value="card">Card</label><label><input type="radio" name="pay" value="cod">Cash on delivery</label></div>
+  <label class="w" id="upiF">UPI ID<input name="upi" placeholder="name@bank"><span class="err" data-e="upi"></span></label>
+  <label class="w" id="cardF" hidden>Card number<input name="card" inputmode="numeric" maxlength="19" placeholder="Demo only: only the last 4 digits are kept"><span class="err" data-e="card"></span></label>
+  <button class="btn w" type="submit">Pay ${fmt(t.total)}</button></form>${summary(t, true)}</div>`;
+      },
+      orders() {
+        const O = Orders.all();
+        if (!O.length)
+          return empty("No orders yet", "Orders you place will appear here.");
+        return `<h2>My orders</h2><div style="margin-top:18px">${O.map(
+          (
+            o,
+          ) => `<div class="panel order"><div class="row"><b>${o.id}</b><span class="tag">Confirmed</span></div>
+  <small>${esc(o.date)} · ${esc(o.pay)}</small>
+  <p>${o.lines.map((l) => `${esc(l.name)} × ${l.q}`).join(", ")}</p>
+  <p><small>Deliver to ${esc(o.cust.name)}, ${esc(o.cust.addr)}</small></p><b>Total ${fmt(o.totals.total)}</b></div>`,
+        ).join("")}</div>`;
+      },
+    };
+    function summary(t, noBtn) {
+      return `<aside class="panel sum"><h3 style="margin-bottom:8px">Summary</h3>
+ <div><span>Subtotal</span><span>${fmt(t.sub)}</span></div><div><span>GST (18%)</span><span>${fmt(t.gst)}</span></div>
+ <div><span>Delivery</span><span>${t.ship ? fmt(t.ship) : "Free"}</span></div><div class="tot"><span>Total</span><span>${fmt(t.total)}</span></div>
+ ${noBtn ? "" : `<a class="btn" style="display:block;margin-top:12px" href="#/billing">Continue to billing</a>`}</aside>`;
+    }
+
+    /* ---------- 4. ROUTER + EVENTS ---------- */
+    const ROUTES = {
+      "": "home",
+      wishlist: "wishlist",
+      order: "order",
+      billing: "billing",
+      orders: "orders",
+    };
+    const NAV = [
+      ["", "Shop"],
+      ["wishlist", "Wishlist", () => Wish.all().length],
+      ["order", "Order", Cart.count],
+      ["billing", "Billing"],
+      ["orders", "My orders"],
+    ];
+    const app = document.getElementById("app");
+    function render() {
+      const r = location.hash.replace(/^#\/?/, "");
+      const v = ROUTES[r] || "home";
+      document.getElementById("nav").innerHTML = NAV.map(
+        ([h, l, n]) =>
+          `<a href="#/${h}" ${h === r ? 'aria-current="page"' : ""}>${l}${n && n() ? `<b>${n()}</b>` : ""}</a>`,
+      ).join("");
+      app.innerHTML = Views[v]();
+      document.title = v === "home" ? "Kiln & Co." : l(v) + " – Kiln & Co.";
+    }
+    const l = (v) => v[0].toUpperCase() + v.slice(1);
+    const toast = (m) => {
+      const t = document.getElementById("toast");
+      t.textContent = m;
+      t.classList.add("on");
+      clearTimeout(toast.t);
+      toast.t = setTimeout(() => t.classList.remove("on"), 1600);
+    };
+    window.addEventListener("hashchange", () => {
+      render();
+      scrollTo(0, 0);
+    });
+
+    document.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-a]");
+      if (!b) return;
+      const id = +b.dataset.id,
+        a = b.dataset.a;
+      if (a === "add") {
+        Cart.add(id);
+        toast("Added to order");
+      }
+      if (a === "wish") {
+        toast(
+          Wish.toggle(id) ? "Saved to wishlist" : "Removed from wishlist",
+        );
+      }
+      if (a === "wishall") {
+        Wish.all().forEach((i) => Cart.add(i));
+        toast("Added all to order");
+      }
+      if (a === "qty") Cart.add(id, +b.dataset.n);
+      if (a === "del") Cart.remove(id);
+      if (a === "cat") {
+        filter.cat = b.dataset.c;
+      }
+      render();
+    });
+    document.addEventListener("input", (e) => {
+      if (e.target.id === "q") {
+        filter.q = e.target.value;
+        document.getElementById("grid").innerHTML = grid();
+      }
+      if (e.target.name === "pay") {
+        const v = e.target.value;
+        document.getElementById("upiF").hidden = v !== "upi";
+        document.getElementById("cardF").hidden = v !== "card";
+      }
+    });
+    document.addEventListener("submit", (e) => {
+      if (e.target.id !== "bill") return;
+      e.preventDefault();
+      const f = Object.fromEntries(new FormData(e.target));
+      f.upi = f.upi || "";
+      f.card = f.card || "";
+      const errs = Billing.validate(f);
+      e.target
+        .querySelectorAll("[data-e]")
+        .forEach((s) => (s.textContent = errs[s.dataset.e] || ""));
+      const first = Object.keys(errs)[0];
+      if (first) {
+        e.target.elements[first].focus();
+        return;
+      }
+      const o = Orders.place(f);
+      location.hash = "#/orders";
+      toast("Order " + o.id + " confirmed");
+    });
+    render();
+  </script>
+</body>
+
+</html>
